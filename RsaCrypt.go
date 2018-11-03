@@ -36,6 +36,17 @@ func RsaEncrypt(plainText ,key []byte)(cryptText []byte,err error){
 	//1. pem 解码
 	block, _:= pem.Decode(key)
 
+	//防止用户传的密钥不正确导致panic,这里恢复程序并打印错误
+	defer func(){
+		if err:=recover();err!=nil{
+			switch err.(type){
+			case runtime.Error:
+				fmt.Println("runtime err:",err,"请检查密钥是否正确")
+			default:
+				fmt.Println("error:",err)
+			}
+		}
+	}()
 	//2. block中的Bytes是x509编码的内容, x509解码
 	publicKeyInterface,err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err!=nil{
@@ -71,6 +82,17 @@ func RsaDecrypt(cryptText ,key []byte)(plainText []byte,err error){
 	//1. pem格式解码
 	block, _ := pem.Decode(key)
 
+	//防止用户传的密钥不正确导致panic,这里恢复程序并打印错误
+	defer func(){
+		if err:=recover();err!=nil{
+			switch err.(type){
+			case runtime.Error:
+				fmt.Println("runtime err:",err,"请检查密钥是否正确")
+			default:
+				fmt.Println("error:",err)
+			}
+		}
+	}()
 	//2.x509解码
 	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err!=nil{
