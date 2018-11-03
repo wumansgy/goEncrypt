@@ -19,11 +19,11 @@ func main(){
 	fmt.Println("明文为：",string(plaintext))
 
 	//传入明文和自己定义的密钥，密钥为8字节，如果不足8字节函数内部自动补全，超过8字节函数内部截取
-	cryptText := des.DesCBC_Encrypt(plaintext, []byte("asd12345")) //得到密文
+	cryptText := wmgocrypt.DesCBC_Encrypt(plaintext, []byte("asd12345")) //得到密文
 	fmt.Println("DES的CBC模式加密后的密文为:", base64.StdEncoding.EncodeToString(cryptText))
 
 	//传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错，8字节，如果不足8字节函数内部自动补全，超过8字节函数内部截取
-	newplaintext := des.DesCBC_Decrypt(cryptText, []byte("asd12345"))  //解密得到密文
+	newplaintext := wmgocrypt.DesCBC_Decrypt(cryptText, []byte("asd12345"))  //解密得到密文
 
 	fmt.Println("DES的CBC模式解密完：", string(newplaintext))
 }
@@ -39,11 +39,11 @@ func main(){
 	fmt.Println("明文为：",string(plaintext))
 
 	//传入明文和自己定义的密钥，密钥为24字节，如果不足24字节函数内部自动补全，不过超过24字节函数内部截取
-	cryptText := des.TripleDesEncrypt(plaintext, []byte("wumansgy12345678asdfghjk"))
+	cryptText := wmgocrypt.TripleDesEncrypt(plaintext, []byte("wumansgy12345678asdfghjk"))
 	fmt.Println("三重DES的CBC模式加密后的密文为:", base64.StdEncoding.EncodeToString(cryptText))
 
 	//传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错，24字节，如果不足24字节函数内部自动补全，超过24字节函数内部截取
-	newplaintext := des.TripleDesDecrypt(cryptText, []byte("wumansgy12345678asdfghjk"))
+	newplaintext := wmgocrypt.TripleDesDecrypt(cryptText, []byte("wumansgy12345678asdfghjk"))
 
 	fmt.Println("三重DES的CBC模式解密完：", string(newplaintext))
 }
@@ -59,11 +59,11 @@ func main(){
 	fmt.Println("明文为：",string(plaintext))
 
 	//传入明文和自己定义的密钥，密钥为16字节，如果不足16字节函数内部自动补全，超过16字节函数内部截取
-	cryptText := aes.AesCBC_Encrypt(plaintext, []byte("wumansgygoaescry"))
+	cryptText := wmgocrypt.AesCBC_Encrypt(plaintext, []byte("wumansgygoaescry"))
 	fmt.Println("AES的CBC模式加密后的密文为:", base64.StdEncoding.EncodeToString(cryptText))
 
 	//传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错，16字节，如果不足16字节函数内部自动补全，超过16字节函数内部截取
-	newplaintext := aes.AesCBC_Decrypt(cryptText, []byte("wumansgygoaescry"))
+	newplaintext := wmgocrypt.AesCBC_Decrypt(cryptText, []byte("wumansgygoaescry"))
 
 	fmt.Println("AES的CBC模式解密完：", string(newplaintext))
 }
@@ -79,11 +79,11 @@ func main(){
 	fmt.Println("明文为：",string(plaintext))
 
 	//传入明文和自己定义的密钥，密钥为16字节，如果不足16字节函数内部自动补全，超过16字节函数内部截取
-	cryptText := aes.AesCTR_Encrypt(plaintext, []byte("wumansgygoaesctr"))
+	cryptText := wmgocrypt.AesCTR_Encrypt(plaintext, []byte("wumansgygoaesctr"))
 	fmt.Println("AES的CTR模式加密后的密文为:", base64.StdEncoding.EncodeToString(cryptText))
 
 	//传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错，16字节，如果不足16字节函数内部自动补全，超过16字节函数内部截取
-	newplaintext := aes.AesCTR_Decrypt(cryptText, []byte("wumansgygoaesctr"))
+	newplaintext := wmgocrypt.AesCTR_Decrypt(cryptText, []byte("wumansgygoaesctr"))
 
 	fmt.Println("AES的CTR模式解密完：", string(newplaintext))
 }
@@ -101,7 +101,7 @@ func main(){
 
 ```
 func main() {
-	rsa.GetKey()
+	wmgocrypt.GetKey()
 }
 ```
 
@@ -156,14 +156,14 @@ ad6gP18x4SD9oHZEkQsMHADpGK57k6tNkxnnB+AlAjXOuzwXh/8Q0vN9FsSW++hW
 -----END wuman public key-----`)
 
 	//直接传入明文和公钥加密得到密文
-	crypttext, err := rsa.RsaEncrypt(plaintext, publickey)
+	crypttext, err := wmgocrypt.RsaEncrypt(plaintext, publickey)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	fmt.Println("密文", hex.EncodeToString(crypttext))
 	//解密操作，直接传入密文和私钥解密操作，得到明文
-	plaintext, err = rsa.RsaDecrypt(crypttext, privatekey)
+	plaintext, err = wmgocrypt.RsaDecrypt(crypttext, privatekey)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -184,7 +184,7 @@ ad6gP18x4SD9oHZEkQsMHADpGK57k6tNkxnnB+AlAjXOuzwXh/8Q0vN9FsSW++hW
 ```
 func main(){
 	//获取文件哈希的时候，需要传入文件的路径就行了，如果传入文件夹会报错
-	fileHash,err:=sha.GetFileHash256("D:/gocode/播放器.zip")
+	fileHash,err:=wmgocrypt.GetFileHash256("D:/gocode/播放器.zip")
 	if err!=nil{
 		fmt.Println(err)
 		return
@@ -192,7 +192,7 @@ func main(){
 	fmt.Println("文件的哈希为：",fileHash)
 
 	//得到普通字符串哈希直接传入字符串就行
-	Hash:=sha.GetStringHash256("得到普通哈希")
+	Hash:=wmgocrypt.GetStringHash256("得到普通哈希")
 	fmt.Println("普通字符串哈希:",Hash)
 
 }
@@ -205,7 +205,7 @@ func main(){
 ```
 func main(){
 	//获取文件哈希的时候，需要传入文件的路径就行了，如果传入文件夹会报错
-	fileHash,err:=sha.GetFileHash512("D:/gocode/播放器.zip")   
+	fileHash,err:=wmgocrypt.GetFileHash512("D:/gocode/播放器.zip")   
 	if err!=nil{
 		fmt.Println(err)
 		return
@@ -213,7 +213,7 @@ func main(){
 	fmt.Println("文件的哈希为：",fileHash)
 
 	//得到普通字符串哈希直接传入字符串就行
-	Hash:=sha.GetStringHash512("得到普通哈希")
+	Hash:=wmgocrypt.GetStringHash512("得到普通哈希")
 	fmt.Println("普通字符串哈希:",Hash)
 }
 ```
