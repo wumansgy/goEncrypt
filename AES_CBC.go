@@ -3,7 +3,6 @@ package wmgocrypt
 import (
 	"crypto/aes"
 	"crypto/cipher"
-	"wmgocrypt/Tools"
 	"bytes"
 	"runtime"
 	"fmt"
@@ -35,7 +34,7 @@ func AesCBC_Encrypt(plainText,key []byte)[]byte{
 		panic(err)
 	}
 	//2.分组填充数据 blockSize 16
-	paddingText := Tools.PKCS5Padding(plainText, block.BlockSize())
+	paddingText := PKCS5Padding(plainText, block.BlockSize())
 	//3.创建使用cbc分组模式的blockMode接口
 	iv :=[]byte("wumansgy12345678")//初始化向量，需要和block.blocksize长度一样
 	blockMode := cipher.NewCBCEncrypter(block, iv)
@@ -82,7 +81,7 @@ func AesCBC_Decrypt(cipherText,key []byte) []byte{
 		}     //防止用户输入两次密钥不一样，然后返回错误
 	}()
 
-	plainText := Tools.PKCS5UnPadding(paddingText)
+	plainText := PKCS5UnPadding(paddingText)
 
 	//5.返回明文
 	return plainText

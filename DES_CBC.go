@@ -3,7 +3,6 @@ package wmgocrypt
 import (
 	"crypto/des"
 	"crypto/cipher"
-	"wmgocrypt/Tools"
 	"bytes"
 	"runtime"
 	"fmt"
@@ -39,7 +38,7 @@ func DesCBC_Encrypt(plainText ,key []byte)[]byte{//加密密钥是要8字节的
 		panic(err)
 	}
 	//2.对明文进行分组填充处理
-	paddingText := Tools.PKCS5Padding(plainText, block.BlockSize())
+	paddingText := PKCS5Padding(plainText, block.BlockSize())
 
 	//3.指定使用哪种分组模式 返回一个密码分组链接模式的、底层用b加密的BlockMode接口，初始向量iv的长度必须等于b的块尺寸。
 	iv:=[]byte("wumansgy")   //初始化向量
@@ -89,7 +88,7 @@ func DesCBC_Decrypt(cipherText ,key []byte) []byte{
 			}
 		}     //防止用户输入两次密钥不一样，然后返回错误
 	}()
-	unPaddingText := Tools.PKCS5UnPadding(plainText)
+	unPaddingText := PKCS5UnPadding(plainText)
 
 	return unPaddingText
 }

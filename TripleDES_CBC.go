@@ -3,7 +3,6 @@ package wmgocrypt
 import (
 	"crypto/des"
 	"crypto/cipher"
-	"wmgocrypt/Tools"
 	"bytes"
 	"runtime"
 	"fmt"
@@ -36,7 +35,7 @@ func TripleDesEncrypt(plainText,key []byte)[]byte{
 		panic(err)
 	}
 	//2. 分组填充
-	paddingText := Tools.PKCS5Padding(plainText, block.BlockSize())
+	paddingText := PKCS5Padding(plainText, block.BlockSize())
 
 	//3.创建CBC分组模式blockMode
 	iv :=[]byte("wumansgy")
@@ -85,7 +84,7 @@ func TripleDesDecrypt(cipherText,key []byte) []byte{
 			}
 		}     //防止用户输入两次密钥不一样，然后返回错误
 	}()
-	plainText := Tools.PKCS5UnPadding(paddingText)
+	plainText := PKCS5UnPadding(paddingText)
 
 	return plainText
 }

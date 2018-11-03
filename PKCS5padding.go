@@ -1,4 +1,4 @@
-package Tools
+package wmgocrypt
 
 import (
 	"bytes"
