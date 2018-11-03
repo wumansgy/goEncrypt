@@ -1,4 +1,4 @@
-package aes
+package wmgocrypt
 
 import (
 	"crypto/aes"

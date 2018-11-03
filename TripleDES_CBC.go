@@ -1,4 +1,4 @@
-package des
+package wmgocrypt
 
 import (
 	"crypto/des"

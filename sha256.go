@@ -1,4 +1,4 @@
-package sha
+package wmgocrypt
 
 import (
 	"crypto/sha256"

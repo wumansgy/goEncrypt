@@ -1,4 +1,4 @@
-package rsa
+package wmgocrypt
 
 import (
 	"encoding/pem"
