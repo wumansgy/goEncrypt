@@ -279,12 +279,12 @@ WjPtDIQJxQ3AnvFbQaoJ+0gvOtFsR8jRVVD2lLwAQsrTDk3+L/ZvmhGhzjcANsX/
 W/fnOWXyXQ7DB16jMSQ=
 -----END WUMAN ECC PUBLIC KEY-----`)
 	msg:=[]byte("数字签名测试")
-	rtext,stext:=day03.EccSign(msg,privateKey)
+	rtext,stext:=wmgocrypt.EccSign(msg,privateKey)
 
 	fmt.Println("数字签名的消息为：",hex.EncodeToString(rtext)+hex.EncodeToString(stext))
 
 	//验证数字签名正不正确
-	result:=day03.EccVerifySign(msg,publicKey,rtext,stext)
+	result:=wmgocrypt.EccVerifySign(msg,publicKey,rtext,stext)
 	if result{   //如果result返回的是true那么就是本人签名，否则不是，只有私钥加密，相对的公钥验证才可以认为是本人
 		fmt.Println("数字签名正确，是本人")
 	}else{
