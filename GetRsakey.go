@@ -26,7 +26,7 @@ import (
 
 */
 
-func GetKey(){
+func GetRsaKey(){
 	//1. GetKey函数使用随机数据生成器random生成一对具有指定字位数的RSA密钥。
 	//Reader是一个全局、共享的密码用强随机数生成器。在Unix类型系统中，会从/dev/urandom读取；而Windows中会调用CryptGenRandom API。
 	privateKey, _ := rsa.GenerateKey(rand.Reader, 2048)

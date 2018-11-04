@@ -11,7 +11,7 @@ go get github.com/wumansgy/wmgocrypt
 
 然后下载到本地可以直接调用，包括了DES的CBC模式的加密解密（虽然DES早就被破解，但是可以参考使用），三重DES的加密解密（可以使用），AES的CBC模式和CTR模式（对称加密中常用的加密算法），非对称加密RSA的加密解密（比较常用的非对称加密算法），椭圆曲线加密算法（后面更新），还有哈希函数sha256，sha512的快速使用（MD5，SHA1已经在2004，2005年被陆续攻破，现在常用sha256和sha512）
 
-#### DES的快速使用
+## 1.1DES的快速使用
 
 ```
 func main(){
@@ -31,7 +31,7 @@ func main(){
 
 ![](image/1.png)
 
-#### 三重DES的快速使用
+## 1.2三重DES的快速使用
 
 ```
 func main(){
@@ -51,7 +51,7 @@ func main(){
 
 ![](image/2.png)
 
-#### AES的CBC模式的快速使用
+## 2.1AES的CBC模式的快速使用
 
 ```
 func main(){
@@ -71,7 +71,7 @@ func main(){
 
 ![](image/3.png)
 
-#### AES的CTR模式的快速使用
+## 2.1AES的CTR模式的快速使用
 
 ```
 func main(){
@@ -91,17 +91,17 @@ func main(){
 
 ![](image/4.png)
 
-#### 非对称加密RSA的快速使用
+## 3. 非对称加密RSA的快速使用
 
-##### 非对称加密需要先生成一对公钥和私钥，公钥和私钥是成对出现的，公钥加密只能私钥解密，私钥加密只能公钥解密
+##### 非对称加密需要先生成一对公钥和私钥，公钥和私钥是成对出现的，公钥加密只能私钥解密，私钥加密只能公钥解密，（一般加密都是使用私钥加密，公钥解密，数字签名就是使用私钥加密消息的哈希，然后公钥解密得到哈希查看是否和消息的哈希一样）
 
-##### 使用
+#### 3.1 使用
 
 先直接调用GetKet()就可以在本地生成一个私钥文件，一个公钥文件
 
 ```
 func main() {
-	wmgocrypt.GetKey()
+	wmgocrypt.GetRsaKey()
 }
 ```
 
@@ -111,7 +111,7 @@ func main() {
 
 ![](image/6.png)
 
-#### 加解密使用
+#### 3.2 RSA加解密使用（公钥加密私钥解密）
 
 ```
 func main() {
@@ -177,9 +177,129 @@ ad6gP18x4SD9oHZEkQsMHADpGK57k6tNkxnnB+AlAjXOuzwXh/8Q0vN9FsSW++hW
 > **RSA在非对称加密中使用比较广泛**
 >
 
-### 附带的哈希函数sha256和sha512使用非常简单
+#### 3.3 RSA加数字签名使用（私钥加密，公钥解密，函数内部是加密消息的哈希）
 
-#### sh256的快速使用
+**快速实现**
+
+```
+func main(){
+	privateKey:=[]byte(`-----BEGIN  WUMAN  PRIVATE KEY-----
+MIIEpAIBAAKCAQEA0Pmhu/ECgMytk5SxCVmsntiSCv8wKvhCpTTX9DBWNFWYPk9+
+9M0m4FszP2dXoz2TfFi4JYhAWx0S558pAAE71RmEZ4juF0Ah7ESnXsMNqjh04yL+
+CnaYaPnJR6hpA1yuCoVmOmlDUQazJ5d+xc1SJt+hxpJBq/fqyCkMaXfAKKR/IWSY
+Q8csKeSdQfXkf01vjTr0FniCwBEn8QaWin0ltX+sB2YRfrPNPAYc0LcjUCVs+OX8
+qeEthgZj+MAEJe5KE6d2BaXXEPQBuTClXfG+LuQ+kK5350RFfwe1YH6a/Mjun9g0
+z0Faljf96n4JvCIruHoGUUXOadIlaLRFfXvFJwIDAQABAoIBACMqHoEVqSorRvoS
+h0ffgyCnqMuY7W4NoIlUPxKkH51m2duCXQasjuIp9pGwvhqF/g9qjnIiX1H1rnyz
+V57clkjhploVvJrE+/BaDR/xCpeeMG0YMk9obXUcszYPrLwYGGFE2VLy65Ty36rF
+31tBlZVdBEf5zHs3mJZd8ey9beRom+h2AgD7cRXaRNL1iEpc4RLETchDAiP8vUQc
+ov55CBkuj8pNrRwdIDfX52j5CruXebJOx3YXDO1SjN/UX3fG91Ev+i4s8KDnURcG
+dULxFrqc7U3uCb4ZzARyNdBySqHa94NA1E0+xYijHKXADT/7OFsKceQNRfRUR4Cn
+f0uOuOECgYEA727Y1pJAKODTwDV0el3FIPVujCcSCem15yD6q6YWkqnaQeaeWOz3
+kQ+33z+ICLtAhygv2/cGQbL5/3FXhCpKPRNU7GgzuIcjzOBGfeZilF+PLiNJp0L6
+QZ5Vst1DwnZxc/uK69JXEtUUNb7CcAApbf/3XtMllj4hG+OUsok//K0CgYEA329G
+VkjA/7oVuP4mto1+wY4cD/0f2MeGlk/c9DLE8qJhVGFHsCu6phj9MiArZYAi5Qfy
+6AmF46UBMvtyi2aNghZYZu4oJFhqfAMsidxAegsLtgN2R34LMkC/g5yTotn3b4pj
+NYh/P1GDfDIfoMpaapA9RTHRni49WCVp293mz6MCgYEAluV+JSTA6MJg0Xce9Gua
+bB4h0JRjCvpO2N5w/LLM8Ru44OWOEC8wCy0jzcAFZLNWhJewKenx+H/qjLGK3VGl
+vf4r/F3jkr0gs+L4qioDIM1kuEgnCBHvFGHMUtCd/rWU5Oq37819cPH3LbQOaHXB
+poC2Dv31Z026og/4y9gyCnUCgYEAhUQIbtRsENs7s6AbFQ0mCmopgLvYL+Mp+iNe
+RWS2pYWGid6P9JrQc9s5wZkAaUTZC0QHdLChZBr5sR/avRyI0ItlZNctqCf4M0lt
+Wji9WE2YSZKdDJ04LlwCHozYXeylsaiX7ckhJHII+52l0bB/50lq0geZ4D/yJM4D
+6rjavwMCgYAKDPYuEO4vaES2B5bE3aFiLFySBV+VjmLpiOndymC8OdYF5J+p0XWG
+lDQfXWXnrHJ/e6rcH4BmhGz4qk6EN9SLUrd2DNbQ+tzXJIkPBBBZ8ykyQ/p0u/52
+edc9SE3vb69yiVPqDinw63ZWFkIqMjh5uSXXQAn/dYSWGhaCzFhcaA==
+-----END  WUMAN  PRIVATE KEY-----
+`)
+	publicKey:=[]byte(`-----BEGIN WUMAN  PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0Pmhu/ECgMytk5SxCVms
+ntiSCv8wKvhCpTTX9DBWNFWYPk9+9M0m4FszP2dXoz2TfFi4JYhAWx0S558pAAE7
+1RmEZ4juF0Ah7ESnXsMNqjh04yL+CnaYaPnJR6hpA1yuCoVmOmlDUQazJ5d+xc1S
+Jt+hxpJBq/fqyCkMaXfAKKR/IWSYQ8csKeSdQfXkf01vjTr0FniCwBEn8QaWin0l
+tX+sB2YRfrPNPAYc0LcjUCVs+OX8qeEthgZj+MAEJe5KE6d2BaXXEPQBuTClXfG+
+LuQ+kK5350RFfwe1YH6a/Mjun9g0z0Faljf96n4JvCIruHoGUUXOadIlaLRFfXvF
+JwIDAQAB
+-----END WUMAN  PUBLIC KEY-----`)
+	msg:=[]byte("RSA数字签名测试")
+	signmsg,err:=wmgocrypt.RsaSign(msg,privateKey)
+	if err!=nil{
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("RSA数字签名的消息为：",hex.EncodeToString(signmsg))
+
+	//验证数字签名正不正确
+	result:=wmgocrypt.RsaVerifySign(msg,signmsg,publicKey)
+	if result{   //如果result返回的是true那么就是本人签名，否则不是，只有私钥加密，相对的公钥验证才可以认为是本人
+		fmt.Println("RSA数字签名正确，是本人")
+	}else{
+		fmt.Println("RSA数字签名错误，不是本人")
+	}
+
+}
+```
+
+![](image/11.png)
+
+## 4.ECC椭圆曲线应用
+
+**（GO里面只有ECC数字签名的接口，所以我们这里先实现一下ECC的数字签名功能，后期再把ECC椭圆曲线加密的函数封装好上传）**
+
+#### 4.1 ECC使用
+
+和RSA使用一样，先直接调用GetEccKey()就可以在本地生成一个私钥文件，一个公钥文件
+
+```
+func main(){
+    wmgocrypt.GetEccKey()
+}
+```
+
+![](image/12.png)
+
+![](image/13.png)
+
+![](image/14.png)
+
+#### 4.2 ECC数字签名快速使用实现
+
+```
+func main(){
+	privateKey:=[]byte(`-----BEGIN WUMAN ECC PRIVATE KEY-----
+MIHcAgEBBEIAZEdmSEQlu9jHzVTOHzGnQOhGNtj79Z/Hu14bYb7SidfyCS39ITZ4
+ShSJ4E5OfXcXI2eXTX9jQb/BPbufumLxdf2gBwYFK4EEACOhgYkDgYYABAEAmpB3
+ckiCr/9GIj6ujTs9fl7K2kBaM+0MhAnFDcCe8VtBqgn7SC860WxHyNFVUPaUvABC
+ytMOTf4v9m+aEaHONwA2xf/V35oCMAiVKwx9kovR42m/0XRPEpbuocaIflVDdQK9
+6BDdzYQrU+s/GL3TXxBE+L1b9+c5ZfJdDsMHXqMxJA==
+-----END WUMAN ECC PRIVATE KEY-----`)
+	publicKey:=[]byte(`-----BEGIN WUMAN ECC PUBLIC KEY-----
+MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQBAJqQd3JIgq//RiI+ro07PX5eytpA
+WjPtDIQJxQ3AnvFbQaoJ+0gvOtFsR8jRVVD2lLwAQsrTDk3+L/ZvmhGhzjcANsX/
+1d+aAjAIlSsMfZKL0eNpv9F0TxKW7qHGiH5VQ3UCvegQ3c2EK1PrPxi9018QRPi9
+W/fnOWXyXQ7DB16jMSQ=
+-----END WUMAN ECC PUBLIC KEY-----`)
+	msg:=[]byte("数字签名测试")
+	rtext,stext:=day03.EccSign(msg,privateKey)
+
+	fmt.Println("数字签名的消息为：",hex.EncodeToString(rtext)+hex.EncodeToString(stext))
+
+	//验证数字签名正不正确
+	result:=day03.EccVerifySign(msg,publicKey,rtext,stext)
+	if result{   //如果result返回的是true那么就是本人签名，否则不是，只有私钥加密，相对的公钥验证才可以认为是本人
+		fmt.Println("数字签名正确，是本人")
+	}else{
+		fmt.Println("数字签名错误，不是本人")
+	}
+}
+```
+
+![](image/15.png)
+
+> ECC椭圆曲线技术应用广泛，目前我国居民身份证数字签名技术就是使用的ECC，虚拟货币比特币和以太坊中也使用了ECC技术，后面我们把ECC加密的方法也实现好。
+
+## 5.附带的哈希函数sha256和sha512使用非常简单
+
+#### 5.1 sh256的快速使用
 
 ```
 func main(){
@@ -200,7 +320,7 @@ func main(){
 
 ![](image/9.png)
 
-#### sha512的快速使用
+#### 5.2 sha512的快速使用
 
 ```
 func main(){
