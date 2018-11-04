@@ -6,7 +6,7 @@ import (
 	"crypto/rsa"
 	"crypto/rand"
 	"runtime"
-	"fmt"
+	"log"
 )
 
 /*
@@ -19,7 +19,10 @@ import (
 /*
 	用rsa加密操作
 */
-
+//输出日志的格式
+func init(){
+	log.SetFlags(log.Ldate|log.Lshortfile)
+}
 func RsaEncrypt(plainText ,key []byte)(cryptText []byte,err error){
 
 	/*file, _ := os.Open(path)
@@ -43,9 +46,9 @@ func RsaEncrypt(plainText ,key []byte)(cryptText []byte,err error){
 		if err:=recover();err!=nil{
 			switch err.(type){
 			case runtime.Error:
-				fmt.Println("runtime err:",err,"请检查密钥是否正确")
+				log.Println("runtime err:",err,"请检查密钥是否正确")
 			default:
-				fmt.Println("error:",err)
+				log.Println("error:",err)
 			}
 		}
 	}()
@@ -89,9 +92,9 @@ func RsaDecrypt(cryptText ,key []byte)(plainText []byte,err error){
 		if err:=recover();err!=nil{
 			switch err.(type){
 			case runtime.Error:
-				fmt.Println("runtime err:",err,"请检查密钥是否正确")
+				log.Println("runtime err:",err,"请检查密钥是否正确")
 			default:
-				fmt.Println("error:",err)
+				log.Println("error:",err)
 			}
 		}
 	}()

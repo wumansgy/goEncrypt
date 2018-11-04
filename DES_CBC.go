@@ -5,7 +5,7 @@ import (
 	"crypto/cipher"
 	"bytes"
 	"runtime"
-	"fmt"
+	"log"
 )
 
 /*
@@ -22,6 +22,10 @@ import (
 3. 选择按照怎样的套路进行每组的迭代加密  CBC
 4. 加密输出结果
  */
+func init(){
+	log.SetFlags(log.Ldate|log.Lshortfile)
+}
+
 func DesCBC_Encrypt(plainText ,key []byte)[]byte{//加密密钥是要8字节的
 	//判断用户传过来的key是否符合8字节，如果不符合8字节加以处理
 	keylen:=len(key)
@@ -78,15 +82,16 @@ func DesCBC_Decrypt(cipherText ,key []byte) []byte{
 
 	//5. 删除填充的内容
 	//删除之前防止出现用户输入两次密钥不一样，引起panic,所以做一个错误处理
+	//防止用户传的密钥不正确导致panic,这里恢复程序并打印错误
 	defer func(){
 		if err:=recover();err!=nil{
 			switch err.(type){
 			case runtime.Error:
-				fmt.Println("runtime error:",err,"请检查两次密钥是否一样")
+				log.Println("runtime err:",err,"请检查密钥是否正确")
 			default:
-				fmt.Println("error:",err)
+				log.Println("error:",err)
 			}
-		}     //防止用户输入两次密钥不一样，然后返回错误
+		}
 	}()
 	unPaddingText := PKCS5UnPadding(plainText)
 

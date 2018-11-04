@@ -5,7 +5,7 @@ import (
 	"crypto/cipher"
 	"bytes"
 	"runtime"
-	"fmt"
+	"log"
 )
 
 /*
@@ -18,6 +18,9 @@ import (
 加密
 	注意 : 这里采用key长度为16字节
  */
+func init(){
+	log.SetFlags(log.Ldate|log.Lshortfile)
+}
 func AesCBC_Encrypt(plainText,key []byte)[]byte{
 	//判断用户传过来的key是否符合16字节，如果不符合16字节加以处理
 	keylen:=len(key)
@@ -74,11 +77,11 @@ func AesCBC_Decrypt(cipherText,key []byte) []byte{
 		if err:=recover();err!=nil{
 			switch err.(type){
 			case runtime.Error:
-				fmt.Println("runtime error:",err,"请检查两次密钥是否一样")
+				log.Println("runtime err:",err,"请检查密钥是否正确")
 			default:
-				fmt.Println("error:",err)
+				log.Println("error:",err)
 			}
-		}     //防止用户输入两次密钥不一样，然后返回错误
+		}
 	}()
 
 	plainText := PKCS5UnPadding(paddingText)
