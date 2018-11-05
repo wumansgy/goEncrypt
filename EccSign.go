@@ -22,7 +22,7 @@ func init(){
 	log.SetFlags(log.Ldate|log.Lshortfile)
 }   //处理日志的格式
 
-func EccSign(msg []byte,Key []byte)([]byte,[]byte){
+func EccSign(msg []byte,Key []byte)(rtext []byte,stext []byte){
 	// 获取私钥
 	//2. pem格式解码
 	block, _ := pem.Decode(Key)
