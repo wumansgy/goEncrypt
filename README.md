@@ -1,4 +1,7 @@
-# wmgocrypt
+```
+goEncrypt
+```
+
 go语言封装的各种对称加密和非对称加密，可以直接使用，包括3重DES，AES的CBC和CTR模式，还有RSA非对称加密
 
 下载到本地可以直接调用
@@ -6,7 +9,7 @@ go语言封装的各种对称加密和非对称加密，可以直接使用，包
 使用方法
 
 ```
-go get github.com/wumansgy/wmgocrypt
+go get github.com/wumansgy/goEncrypt
 ```
 
 然后下载到本地可以直接调用，包括了DES的CBC模式的加密解密（虽然DES早就被破解，但是可以参考使用），三重DES的加密解密（可以使用），AES的CBC模式和CTR模式（对称加密中常用的加密算法），非对称加密RSA的加密解密（比较常用的非对称加密算法），椭圆曲线加密算法（后面更新），还有哈希函数sha256，sha512的快速使用（MD5，SHA1已经在2004，2005年被陆续攻破，现在常用sha256和sha512）
@@ -19,11 +22,11 @@ func main(){
 	fmt.Println("明文为：",string(plaintext))
 
 	//传入明文和自己定义的密钥，密钥为8字节，如果不足8字节函数内部自动补全，超过8字节函数内部截取
-	cryptText := wmgocrypt.DesCBC_Encrypt(plaintext, []byte("asd12345")) //得到密文
+	cryptText := goEncrypt.DesCBC_Encrypt(plaintext, []byte("asd12345")) //得到密文
 	fmt.Println("DES的CBC模式加密后的密文为:", base64.StdEncoding.EncodeToString(cryptText))
 
 	//传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错，8字节，如果不足8字节函数内部自动补全，超过8字节函数内部截取
-	newplaintext := wmgocrypt.DesCBC_Decrypt(cryptText, []byte("asd12345"))  //解密得到密文
+	newplaintext := goEncrypt.DesCBC_Decrypt(cryptText, []byte("asd12345"))  //解密得到密文
 
 	fmt.Println("DES的CBC模式解密完：", string(newplaintext))
 }
@@ -39,11 +42,11 @@ func main(){
 	fmt.Println("明文为：",string(plaintext))
 
 	//传入明文和自己定义的密钥，密钥为24字节，如果不足24字节函数内部自动补全，不过超过24字节函数内部截取
-	cryptText := wmgocrypt.TripleDesEncrypt(plaintext, []byte("wumansgy12345678asdfghjk"))
+	cryptText := goEncrypt.TripleDesEncrypt(plaintext, []byte("wumansgy12345678asdfghjk"))
 	fmt.Println("三重DES的CBC模式加密后的密文为:", base64.StdEncoding.EncodeToString(cryptText))
 
 	//传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错，24字节，如果不足24字节函数内部自动补全，超过24字节函数内部截取
-	newplaintext := wmgocrypt.TripleDesDecrypt(cryptText, []byte("wumansgy12345678asdfghjk"))
+	newplaintext := goEncrypt.TripleDesDecrypt(cryptText, []byte("wumansgy12345678asdfghjk"))
 
 	fmt.Println("三重DES的CBC模式解密完：", string(newplaintext))
 }
@@ -59,11 +62,11 @@ func main(){
 	fmt.Println("明文为：",string(plaintext))
 
 	//传入明文和自己定义的密钥，密钥为16字节，如果不足16字节函数内部自动补全，超过16字节函数内部截取
-	cryptText := wmgocrypt.AesCBC_Encrypt(plaintext, []byte("wumansgygoaescry"))
+	cryptText := goEncrypt.AesCBC_Encrypt(plaintext, []byte("wumansgygoaescry"))
 	fmt.Println("AES的CBC模式加密后的密文为:", base64.StdEncoding.EncodeToString(cryptText))
 
 	//传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错，16字节，如果不足16字节函数内部自动补全，超过16字节函数内部截取
-	newplaintext := wmgocrypt.AesCBC_Decrypt(cryptText, []byte("wumansgygoaescry"))
+	newplaintext := goEncrypt.AesCBC_Decrypt(cryptText, []byte("wumansgygoaescry"))
 
 	fmt.Println("AES的CBC模式解密完：", string(newplaintext))
 }
@@ -79,11 +82,11 @@ func main(){
 	fmt.Println("明文为：",string(plaintext))
 
 	//传入明文和自己定义的密钥，密钥为16字节，如果不足16字节函数内部自动补全，超过16字节函数内部截取
-	cryptText := wmgocrypt.AesCTR_Encrypt(plaintext, []byte("wumansgygoaesctr"))
+	cryptText := goEncrypt.AesCTR_Encrypt(plaintext, []byte("wumansgygoaesctr"))
 	fmt.Println("AES的CTR模式加密后的密文为:", base64.StdEncoding.EncodeToString(cryptText))
 
 	//传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错，16字节，如果不足16字节函数内部自动补全，超过16字节函数内部截取
-	newplaintext := wmgocrypt.AesCTR_Decrypt(cryptText, []byte("wumansgygoaesctr"))
+	newplaintext := goEncrypt.AesCTR_Decrypt(cryptText, []byte("wumansgygoaesctr"))
 
 	fmt.Println("AES的CTR模式解密完：", string(newplaintext))
 }
@@ -101,7 +104,7 @@ func main(){
 
 ```
 func main() {
-	wmgocrypt.GetRsaKey()
+	goEncrypt.GetRsaKey()
 }
 ```
 
@@ -156,14 +159,14 @@ ad6gP18x4SD9oHZEkQsMHADpGK57k6tNkxnnB+AlAjXOuzwXh/8Q0vN9FsSW++hW
 -----END wuman public key-----`)
 
 	//直接传入明文和公钥加密得到密文
-	crypttext, err := wmgocrypt.RsaEncrypt(plaintext, publickey)
+	crypttext, err := goEncrypt.RsaEncrypt(plaintext, publickey)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	fmt.Println("密文", hex.EncodeToString(crypttext))
 	//解密操作，直接传入密文和私钥解密操作，得到明文
-	plaintext, err = wmgocrypt.RsaDecrypt(crypttext, privatekey)
+	plaintext, err = goEncrypt.RsaDecrypt(crypttext, privatekey)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -221,7 +224,7 @@ LuQ+kK5350RFfwe1YH6a/Mjun9g0z0Faljf96n4JvCIruHoGUUXOadIlaLRFfXvF
 JwIDAQAB
 -----END WUMAN  PUBLIC KEY-----`)
 	msg:=[]byte("RSA数字签名测试")
-	signmsg,err:=wmgocrypt.RsaSign(msg,privateKey)
+	signmsg,err:=goEncrypt.RsaSign(msg,privateKey)
 	if err!=nil{
 		fmt.Println(err)
 		return
@@ -229,7 +232,7 @@ JwIDAQAB
 	fmt.Println("RSA数字签名的消息为：",hex.EncodeToString(signmsg))
 
 	//验证数字签名正不正确
-	result:=wmgocrypt.RsaVerifySign(msg,signmsg,publicKey)
+	result:=goEncrypt.RsaVerifySign(msg,signmsg,publicKey)
 	if result{   //如果result返回的是true那么就是本人签名，否则不是，只有私钥加密，相对的公钥验证才可以认为是本人
 		fmt.Println("RSA数字签名正确，是本人")
 	}else{
@@ -251,7 +254,7 @@ JwIDAQAB
 
 ```
 func main(){
-    wmgocrypt.GetEccKey()
+    goEncrypt.GetEccKey()
 }
 ```
 
@@ -279,12 +282,12 @@ WjPtDIQJxQ3AnvFbQaoJ+0gvOtFsR8jRVVD2lLwAQsrTDk3+L/ZvmhGhzjcANsX/
 W/fnOWXyXQ7DB16jMSQ=
 -----END WUMAN ECC PUBLIC KEY-----`)
 	msg:=[]byte("数字签名测试")
-	rtext,stext:=wmgocrypt.EccSign(msg,privateKey)
+	rtext,stext:=goEncrypt.EccSign(msg,privateKey)
 
 	fmt.Println("数字签名的消息为：",hex.EncodeToString(rtext)+hex.EncodeToString(stext))
 
 	//验证数字签名正不正确
-	result:=wmgocrypt.EccVerifySign(msg,publicKey,rtext,stext)
+	result:=goEncrypt.EccVerifySign(msg,publicKey,rtext,stext)
 	if result{   //如果result返回的是true那么就是本人签名，否则不是，只有私钥加密，相对的公钥验证才可以认为是本人
 		fmt.Println("数字签名正确，是本人")
 	}else{
@@ -303,7 +306,7 @@ W/fnOWXyXQ7DB16jMSQ=
 
 ```
 func main(){
-    wmgocrypt.GetEccKey()
+    goEncrypt.GetEccKey()
 }     //这里我们得到的密钥是通过P256曲线得到的，由于之前验证用别的曲线调用以太坊接口会报错
 ```
 
@@ -328,10 +331,10 @@ FooGpsKCbLvrdUW4peVIwKEW+yC3/g2X7Q2A8ftJlYv2X4kDU180GhIQpA==
 -----END WUMAN ECC PUBLIC KEY-----
 `)
 
-	cryptText,_:=wmgocrypt.EccPublicEncrypt(plainText,publicKey)
+	cryptText,_:=goEncrypt.EccPublicEncrypt(plainText,publicKey)
 	fmt.Println("ECC传入公钥加密的密文为：",hex.EncodeToString(cryptText))
 
-	msg,err:=wmgocrypt.EccPrivateDeCrypt(cryptText,privateKey)
+	msg,err:=goEncrypt.EccPrivateDeCrypt(cryptText,privateKey)
 	if err!=nil{
 		fmt.Println(err)
 	}
@@ -350,7 +353,7 @@ FooGpsKCbLvrdUW4peVIwKEW+yC3/g2X7Q2A8ftJlYv2X4kDU180GhIQpA==
 ```
 func main(){
 	//获取文件哈希的时候，需要传入文件的路径就行了，如果传入文件夹会报错
-	fileHash,err:=wmgocrypt.GetFileHash256("D:/gocode/播放器.zip")
+	fileHash,err:=goEncrypt.GetFileHash256("D:/gocode/播放器.zip")
 	if err!=nil{
 		fmt.Println(err)
 		return
@@ -358,7 +361,7 @@ func main(){
 	fmt.Println("文件的哈希为：",fileHash)
 
 	//得到普通字符串哈希直接传入字符串就行
-	Hash:=wmgocrypt.GetStringHash256("得到普通哈希")
+	Hash:=goEncrypt.GetStringHash256("得到普通哈希")
 	fmt.Println("普通字符串哈希:",Hash)
 
 }
@@ -371,7 +374,7 @@ func main(){
 ```
 func main(){
 	//获取文件哈希的时候，需要传入文件的路径就行了，如果传入文件夹会报错
-	fileHash,err:=wmgocrypt.GetFileHash512("D:/gocode/播放器.zip")   
+	fileHash,err:=goEncrypt.GetFileHash512("D:/gocode/播放器.zip")   
 	if err!=nil{
 		fmt.Println(err)
 		return
@@ -379,7 +382,7 @@ func main(){
 	fmt.Println("文件的哈希为：",fileHash)
 
 	//得到普通字符串哈希直接传入字符串就行
-	Hash:=wmgocrypt.GetStringHash512("得到普通哈希")
+	Hash:=goEncrypt.GetStringHash512("得到普通哈希")
 	fmt.Println("普通字符串哈希:",Hash)
 }
 ```
