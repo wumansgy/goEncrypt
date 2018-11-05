@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="879b126a-5488-4e29-a4e1-3a8936e89a2d" name="默认的" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AES_CBC.go" beforeDir="false" afterPath="$PROJECT_DIR$/AES_CBC.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DES_CBC.go" beforeDir="false" afterPath="$PROJECT_DIR$/DES_CBC.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RsaCrypt.go" beforeDir="false" afterPath="$PROJECT_DIR$/RsaCrypt.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GetECCKey.go" beforeDir="false" afterPath="$PROJECT_DIR$/GetECCKey.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,12 +12,24 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="EccSign.go" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/EccSign.go">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="ecies.go" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ecies.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="837">
-              <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
+            <state relative-caret-position="7506">
+              <caret line="391" column="5" selection-start-line="391" selection-start-column="5" selection-end-line="391" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EccCrypt.go" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/EccCrypt.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-891">
+              <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
+              <folding>
+                <element signature="e#15#153#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -40,6 +49,8 @@
         <option value="$PROJECT_DIR$/DES_CBC.go" />
         <option value="$PROJECT_DIR$/GetECCKey.go" />
         <option value="$PROJECT_DIR$/EccSign.go" />
+        <option value="$PROJECT_DIR$/ecies.go" />
+        <option value="$PROJECT_DIR$/EccCrypt.go" />
       </list>
     </option>
   </component>
@@ -66,7 +77,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -78,6 +88,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -103,7 +114,7 @@
     <frame x="-8" y="-8" width="1456" height="886" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21748555" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22182082" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="调试" order="7" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
@@ -111,8 +122,8 @@
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="运行" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -132,6 +143,13 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/EccSign.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1971">
+          <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/GetRsakey.go">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -154,16 +172,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1451">
           <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
-          <folding>
-            <element signature="e#19#87#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AES_CBC.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1807">
-          <caret line="83" column="9" lean-forward="true" selection-start-line="83" selection-start-column="9" selection-end-line="83" selection-end-column="9" />
           <folding>
             <element signature="e#19#87#0" expanded="true" />
           </folding>
@@ -199,8 +207,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/EccSign.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="837">
-          <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
+        <state relative-caret-position="1566">
+          <caret line="67" column="18" selection-start-line="67" selection-start-column="18" selection-end-line="67" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AES_CBC.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="592">
+          <caret line="83" column="9" lean-forward="true" selection-start-line="83" selection-start-column="9" selection-end-line="83" selection-end-column="9" />
+          <folding>
+            <element signature="e#19#87#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/EccCrypt.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-891">
+          <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
+          <folding>
+            <element signature="e#15#153#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ecies.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7506">
+          <caret line="391" column="5" selection-start-line="391" selection-start-column="5" selection-end-line="391" selection-end-column="5" />
         </state>
       </provider>
     </entry>

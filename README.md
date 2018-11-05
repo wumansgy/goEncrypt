@@ -297,6 +297,52 @@ W/fnOWXyXQ7DB16jMSQ=
 
 > ECC椭圆曲线技术应用广泛，目前我国居民身份证数字签名技术就是使用的ECC，虚拟货币比特币和以太坊中也使用了ECC技术，后面我们会把ECC加密的方法也实现好。
 
+#### 4.3 ECC用作加密十用（非对称加密是用公钥来加密，私钥来解密的，由于GO标准包中没有实现ECC加密的接口，只实现了ECC数字签名的接口，我们找了以太坊源码中的ECC加密的使用方法，稍加改造了一下，拿过来用了，在这里调用了以太坊加密包里面的接口来实现ECC加密的方法，我们把加密的东西二次封装了一下，下载包后就可以直接使用）
+
+首先还是先得到公钥和私钥
+
+```
+func main(){
+    wmgocrypt.GetEccKey()
+}     //这里我们得到的密钥是通过P256曲线得到的，由于之前验证用别的曲线调用以太坊接口会报错
+```
+
+然后就可以快速使用了
+
+```
+func main(){
+	plainText:=[]byte("窗前明月光，疑是地上霜,ECC加密解密")
+
+	//这里传入的私钥和公钥是要用GetECCKey里面得到的私钥和公钥，如果自己封装的话，
+	// 获取密钥时传入的第一个参数是要用这条曲线elliptic.P256()，如果用别的会报无效公钥错误，
+	// 例如用P521()这条曲线
+	privateKey:=[]byte(`-----BEGIN WUMAN ECC PRIVATE KEY-----
+MHcCAQEEIKozbXD9G6bGPJ26cCAfEdLrqAe697F8SiLRMdqxzNQ5oAoGCCqGSM49
+AwEHoUQDQgAEk3/hltyR0r0J2Wkkhi4HaREJXS1vFooGpsKCbLvrdUW4peVIwKEW
++yC3/g2X7Q2A8ftJlYv2X4kDU180GhIQpA==
+-----END WUMAN ECC PRIVATE KEY-----
+`)
+	publicKey:=[]byte(`-----BEGIN WUMAN ECC PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEk3/hltyR0r0J2Wkkhi4HaREJXS1v
+FooGpsKCbLvrdUW4peVIwKEW+yC3/g2X7Q2A8ftJlYv2X4kDU180GhIQpA==
+-----END WUMAN ECC PUBLIC KEY-----
+`)
+
+	cryptText,_:=wmgocrypt.EccPublicEncrypt(plainText,publicKey)
+	fmt.Println("ECC传入公钥加密的密文为：",hex.EncodeToString(cryptText))
+
+	msg,err:=wmgocrypt.EccPrivateDeCrypt(cryptText,privateKey)
+	if err!=nil{
+		fmt.Println(err)
+	}
+	fmt.Println("ECC传入私钥解密后的明文为：",string(msg))
+
+
+}
+```
+
+![](image/16.png)
+
 ## 5.附带的哈希函数sha256和sha512使用非常简单
 
 #### 5.1 sh256的快速使用

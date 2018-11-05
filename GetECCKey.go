@@ -22,7 +22,7 @@ func init(){
 //ECC椭圆曲线密钥对生成
 func GetEccKey(){
 	//1.生成密钥对
-	privateKey, _ := ecdsa.GenerateKey(elliptic.P521(), rand.Reader)
+	privateKey, _ := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 
 	//2.将密钥保存到相关的文件中
 	// x509标准编码
