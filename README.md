@@ -353,7 +353,7 @@ FooGpsKCbLvrdUW4peVIwKEW+yC3/g2X7Q2A8ftJlYv2X4kDU180GhIQpA==
 ```
 func main(){
 	//获取文件哈希的时候，需要传入文件的路径就行了，如果传入文件夹会报错
-	fileHash,err:=goEncrypt.GetFileHash256("D:/gocode/播放器.zip")
+	fileHash,err:=goEncrypt.GetFileStringHash256("D:/gocode/播放器.zip")
 	if err!=nil{
 		fmt.Println(err)
 		return
@@ -374,7 +374,7 @@ func main(){
 ```
 func main(){
 	//获取文件哈希的时候，需要传入文件的路径就行了，如果传入文件夹会报错
-	fileHash,err:=goEncrypt.GetFileHash512("D:/gocode/播放器.zip")   
+	fileHash,err:=goEncrypt.GetFileStringHash512("D:/gocode/播放器.zip")   
 	if err!=nil{
 		fmt.Println(err)
 		return
@@ -388,6 +388,17 @@ func main(){
 ```
 
 ![](image/10.png)
+
+#### 5.3  上面两个函数内部已经转换为16进制的字符串了，如果需要返回哈希切片[]byte类型用下面两个函数就行了
+
+```
+func main(){
+    goEncrypt.GetFileHash256
+    goEncrypt.GetFileHash512
+    goEncrypt.GetHash256
+    goEncrypt.GetHash512
+}   //用这几个函数就可以了，得到的就是哈希的[]byte类型
+```
 
 
 
