@@ -14,9 +14,11 @@ import (
 /*
 	AES CTR mode encryption and decryption
 */
-func AesCtrEncrypt(plainText []byte,key[16]byte)([]byte,error){
-	cipherKey:=key[:]
-	block, err := aes.NewCipher(cipherKey)
+func AesCtrEncrypt(plainText ,key []byte)([]byte,error){
+	if len(key)!=16{
+		return nil,ErrKeyLengthSixteen
+	}
+	block, err := aes.NewCipher(key)
 	if err!=nil{
 		return nil,err
 	}
@@ -29,9 +31,11 @@ func AesCtrEncrypt(plainText []byte,key[16]byte)([]byte,error){
 	return  cipherText,nil
 }
 
-func AesCtrDecrypt(cipherText []byte,key [16]byte)([]byte,error){
-	cipherKey:=key[:]
-	block, err:= aes.NewCipher(cipherKey)
+func AesCtrDecrypt(cipherText ,key []byte)([]byte,error){
+	if len(key)!=16{
+		return nil,ErrKeyLengthSixteen
+	}
+	block, err := aes.NewCipher(key)
 	if err!=nil{
 		return nil,err
 	}

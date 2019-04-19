@@ -18,9 +18,11 @@ import (
       algorithm : Encryption: key one encryption -> key two decryption -> key three encryption
                   Decryption: key three decryption -> key two encryption -> key one decryption
  */
-func TripleDesEncrypt(plainText []byte,key [24]byte)([]byte,error){
-	cipherKey:=key[:]
-	block, err := des.NewTripleDESCipher(cipherKey)
+func TripleDesEncrypt(plainText ,key []byte)([]byte,error){
+	if len(key)!=24{
+		return nil,ErrKeyLengthTwentyFour
+	}
+	block, err := des.NewTripleDESCipher(key)
 	if err != nil{
 		return nil,err
 	}
@@ -34,10 +36,12 @@ func TripleDesEncrypt(plainText []byte,key [24]byte)([]byte,error){
 	return cipherText,nil
 }
 
-func TripleDesDecrypt(cipherText []byte,key [24]byte) ([]byte,error){
-	cipherKey:=key[:]
+func TripleDesDecrypt(cipherText ,key []byte) ([]byte,error){
+	if len(key)!=24{
+		return nil,ErrKeyLengthTwentyFour
+	}
 	// 1. Specifies that the 3des decryption algorithm creates and returns a cipher.Block interface using the TDEA algorithm。
-	block, err := des.NewTripleDESCipher(cipherKey)
+	block, err := des.NewTripleDESCipher(key)
 	if err!=nil{
 		return nil,err
 	}

@@ -4,6 +4,9 @@ import "errors"
 
 var (
 	ErrCipherKey=errors.New("The secret key is wrong and cannot be decrypted. Please check")
+	ErrKeyLengthSixteen=errors.New("a sixteen-length secret key is required")
+	ErrKeyLengtheEight=errors.New("a eight-length secret key is required")
+	ErrKeyLengthTwentyFour=errors.New("a twenty-four-length secret key is required")
 )
 
 const (

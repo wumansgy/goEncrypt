@@ -22,9 +22,11 @@ func init(){
 	log.SetFlags(log.Ldate|log.Lshortfile)
 }
 
-func DesCbcEncrypt(plainText []byte,key [8]byte)([]byte,error){
-	cipherKey:=key[:]
-	block, err := des.NewCipher(cipherKey)
+func DesCbcEncrypt(plainText ,key []byte)([]byte,error){
+	if len(key)!=8{
+		return nil,ErrKeyLengtheEight
+	}
+	block, err := des.NewCipher(key)
 	if err!=nil{
 		return nil,err
 	}
@@ -38,9 +40,11 @@ func DesCbcEncrypt(plainText []byte,key [8]byte)([]byte,error){
 	return cipherText,nil
 }
 
-func DesCbcDecrypt(cipherText []byte,key [8]byte) ([]byte,error){
-	cipherKey:=key[:]
-	block, err := des.NewCipher(cipherKey)
+func DesCbcDecrypt(cipherText ,key []byte) ([]byte,error){
+	if len(key)!=8{
+		return nil,ErrKeyLengtheEight
+	}
+	block, err := des.NewCipher(key)
 	if err!=nil{
 		return nil,err
 	}

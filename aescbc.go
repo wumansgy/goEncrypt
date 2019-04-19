@@ -22,9 +22,11 @@ func init(){
 	log.SetFlags(log.Ldate|log.Lshortfile)
 }
 // encrypt
-func AesCbcEncrypt(plainText[]byte,key [16]byte)([]byte,error){
-	cipherKey:=key[:]
-	block, err := aes.NewCipher(cipherKey)
+func AesCbcEncrypt(plainText,key []byte)([]byte,error){
+	if len(key)!=16{
+		return nil,ErrKeyLengthSixteen
+	}
+	block, err := aes.NewCipher(key)
 	if err!=nil{
 		return nil,err
 	}
@@ -37,9 +39,11 @@ func AesCbcEncrypt(plainText[]byte,key [16]byte)([]byte,error){
 }
 
 // decrypt
-func AesCbcDecrypt(cipherText []byte,key [16]byte) ([]byte,error){
-	cipherKey:=key[:]
-	block, err := aes.NewCipher(cipherKey)
+func AesCbcDecrypt(cipherText,key []byte) ([]byte,error){
+	if len(key)!=16{
+		return nil,ErrKeyLengthSixteen
+	}
+	block, err := aes.NewCipher(key)
 	if err!=nil{
 		return nil,err
 	}
