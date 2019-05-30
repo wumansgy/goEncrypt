@@ -3,7 +3,7 @@ package goEncrypt
 import (
 	"crypto/cipher"
 	"crypto/des"
-	"fmt"
+	"log"
 	"runtime"
 )
 
@@ -58,9 +58,9 @@ func TripleDesDecrypt(cipherText ,key []byte) ([]byte,error){
 		if err:=recover();err!=nil{
 			switch err.(type){
 			case runtime.Error:
-				fmt.Println("runtime error:",err,"Check that the key is correct")
+				log.Println("runtime error:",err,"Check that the key is correct")
 			default:
-				fmt.Println("error:",err)
+				log.Println("error:",err)
 			}
 		}
 	}()
