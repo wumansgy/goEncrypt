@@ -22,14 +22,14 @@ func main(){
     	fmt.Println("明文为：", string(plaintext))
     
     	// 传入明文和自己定义的密钥，密钥为8字节
-    	cryptText, err := goEncrypt.DesCbcEncrypt(plaintext, []byte("asd12345")) //得到密文
+    	cryptText, err := goEncrypt.DesCbcEncrypt(plaintext, []byte("asd12345")) //得到密文,可以自己传入初始化向量,如果不传就使用默认的初始化向量,8字节
     	if err != nil {
     		fmt.Println(err)
     	}
     	fmt.Println("DES的CBC模式加密后的密文为:", base64.StdEncoding.EncodeToString(cryptText))
     
     	// 传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错，8字节 如果解密秘钥错误解密后的明文会为空
-    	newplaintext, err := goEncrypt.DesCbcDecrypt(cryptText, []byte("asd12345")) //解密得到密文
+    	newplaintext, err := goEncrypt.DesCbcDecrypt(cryptText, []byte("asd12345")) //解密得到密文,可以自己传入初始化向量,如果不传就使用默认的初始化向量,8字节
     	if err != nil {
     		fmt.Println(err)
     	}
@@ -47,14 +47,14 @@ func main(){
 	plaintext := []byte("床前明月光，疑是地上霜，举头望明月，学习go语言")
     	fmt.Println("明文为：", string(plaintext))
     
-    	// 传入明文和自己定义的密钥，密钥为24字节
+    	// 传入明文和自己定义的密钥，密钥为24字节 可以自己传入初始化向量,如果不传就使用默认的初始化向量,8字节
     	cryptText, err := goEncrypt.TripleDesEncrypt(plaintext, []byte("wumansgy12345678asdfghjk"))
     	if err != nil {
     		fmt.Println(err)
     	}
     	fmt.Println("三重DES的CBC模式加密后的密文为:", base64.StdEncoding.EncodeToString(cryptText))
     
-    	// 传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错
+    	// 传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错 可以自己传入初始化向量,如果不传就使用默认的初始化向量,8字节
     	newplaintext, err := goEncrypt.TripleDesDecrypt(cryptText, []byte("wumansgy12345678asdfghjk"))
     	if err != nil {
     		fmt.Println(err)
@@ -73,14 +73,14 @@ func main(){
 	plaintext := []byte("床前明月光，疑是地上霜，举头望明月，学习go语言")
     	fmt.Println("明文为：",string(plaintext))
     
-    	// 传入明文和自己定义的密钥，密钥为16字节
+    	// 传入明文和自己定义的密钥，密钥为16字节 可以自己传入初始化向量,如果不传就使用默认的初始化向量,16字节
     	cryptText,err := goEncrypt.AesCbcEncrypt(plaintext, []byte("wumansgygoaescry"))
     	if err!=nil{
     		fmt.Println(err)
     	}
     	fmt.Println("AES的CBC模式加密后的密文为:", base64.StdEncoding.EncodeToString(cryptText))
     
-    	// 传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错
+    	// 传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错 可以自己传入初始化向量,如果不传就使用默认的初始化向量,16字节
     	newplaintext ,err:= goEncrypt.AesCbcDecrypt(cryptText, []byte("wumansgygoaescry"))
     	if err!=nil{
     		fmt.Println(err)
@@ -99,14 +99,14 @@ func main(){
 	plaintext := []byte("床前明月光，疑是地上霜，举头望明月，学习go语言")
     	fmt.Println("明文为：",string(plaintext))
     
-    	//传入明文和自己定义的密钥，密钥为16字节
+    	//传入明文和自己定义的密钥，密钥为16字节 可以自己传入初始化向量,如果不传就使用默认的初始化向量,16字节
     	cryptText ,err:= goEncrypt.AesCtrEncrypt(plaintext, []byte("wumansgygoaesctr"))
     	if err!=nil{
     		fmt.Println(err)
     	}
     	fmt.Println("AES的CTR模式加密后的密文为:", base64.StdEncoding.EncodeToString(cryptText))
     
-    	//传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错
+    	//传入密文和自己定义的密钥，需要和加密的密钥一样，不一样会报错 可以自己传入初始化向量,如果不传就使用默认的初始化向量,16字节
     	newplaintext ,err:= goEncrypt.AesCtrDecrypt(cryptText, []byte("wumansgygoaesctr"))
     	if err!=nil{
     		fmt.Println(err)
