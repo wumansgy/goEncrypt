@@ -14,7 +14,7 @@ import (
 /*
 	AES CTR mode encryption and decryption
 */
-func AesCtrEncrypt(plainText ,key []byte)([]byte,error){
+func AesCtrEncrypt(plainText ,key []byte,ivAes...byte)([]byte,error){
 	if len(key)!=16{
 		return nil,ErrKeyLengthSixteen
 	}
@@ -22,7 +22,16 @@ func AesCtrEncrypt(plainText ,key []byte)([]byte,error){
 	if err!=nil{
 		return nil,err
 	}
-	iv := []byte(iv)
+	var iv []byte
+	if len(ivAes)!=0{
+		if len(ivAes)!=16{
+			return nil,ErrIvAes
+		}else{
+			iv=ivAes
+		}
+	}else{
+		iv =[]byte(ivaes)
+	}
 	stream := cipher.NewCTR(block, iv)
 
 	cipherText := make([]byte,len(plainText))
@@ -31,7 +40,7 @@ func AesCtrEncrypt(plainText ,key []byte)([]byte,error){
 	return  cipherText,nil
 }
 
-func AesCtrDecrypt(cipherText ,key []byte)([]byte,error){
+func AesCtrDecrypt(cipherText ,key []byte,ivAes...byte)([]byte,error){
 	if len(key)!=16{
 		return nil,ErrKeyLengthSixteen
 	}
@@ -39,7 +48,16 @@ func AesCtrDecrypt(cipherText ,key []byte)([]byte,error){
 	if err!=nil{
 		return nil,err
 	}
-	iv := []byte(iv)
+	var iv []byte
+	if len(ivAes)!=0{
+		if len(ivAes)!=16{
+			return nil,ErrIvAes
+		}else{
+			iv=ivAes
+		}
+	}else{
+		iv =[]byte(ivaes)
+	}
 	stream := cipher.NewCTR(block, iv)
 
 	plainText := make([]byte,len(cipherText))

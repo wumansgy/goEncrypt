@@ -7,10 +7,13 @@ var (
 	ErrKeyLengthSixteen=errors.New("a sixteen-length secret key is required")
 	ErrKeyLengtheEight=errors.New("a eight-length secret key is required")
 	ErrKeyLengthTwentyFour=errors.New("a twenty-four-length secret key is required")
+	ErrPaddingSize=errors.New("padding size error please check the secret key or iv")
+	ErrIvAes=errors.New("a sixteen-length ivaes is required")
+	ErrIvDes=errors.New("a eight-length ivdes key is required")
 )
 
 const (
-	iv="wumansgy12345678"
+	ivaes="wumansgy12345678"
 	ivdes="wumansgy"
 
 	privateFileName="private.pem"

@@ -22,7 +22,7 @@ func init(){
 	log.SetFlags(log.Ldate|log.Lshortfile)
 }
 
-func DesCbcEncrypt(plainText ,key []byte)([]byte,error){
+func DesCbcEncrypt(plainText ,key []byte,ivDes...byte)([]byte,error){
 	if len(key)!=8{
 		return nil,ErrKeyLengtheEight
 	}
@@ -32,7 +32,16 @@ func DesCbcEncrypt(plainText ,key []byte)([]byte,error){
 	}
 	paddingText := PKCS5Padding(plainText, block.BlockSize())
 
-	iv:=[]byte(ivdes)   // Initialization vector
+	var iv []byte
+	if len(ivDes)!=0{
+		if len(ivDes)!=8{
+			return nil,ErrIvDes
+		}else{
+			iv=ivDes
+		}
+	}else{
+		iv =[]byte(ivdes)
+	}   // Initialization vector
 	blockMode := cipher.NewCBCEncrypter(block, iv)
 
 	cipherText := make([]byte,len(paddingText))
@@ -40,7 +49,7 @@ func DesCbcEncrypt(plainText ,key []byte)([]byte,error){
 	return cipherText,nil
 }
 
-func DesCbcDecrypt(cipherText ,key []byte) ([]byte,error){
+func DesCbcDecrypt(cipherText ,key []byte,ivDes...byte) ([]byte,error){
 	if len(key)!=8{
 		return nil,ErrKeyLengtheEight
 	}
@@ -48,22 +57,37 @@ func DesCbcDecrypt(cipherText ,key []byte) ([]byte,error){
 	if err!=nil{
 		return nil,err
 	}
-	iv:=[]byte(ivdes)   // Initialization vector
-	blockMode := cipher.NewCBCDecrypter(block, iv)
-
-	plainText := make([]byte,len(cipherText))
-	blockMode.CryptBlocks(plainText,cipherText)
 
 	defer func(){
 		if err:=recover();err!=nil{
 			switch err.(type){
 			case runtime.Error:
-				log.Println("runtime err:",err,"Check that the key is correct")
+				log.Println("runtime err:",err,"Check that the key or text is correct")
 			default:
 				log.Println("error:",err)
 			}
 		}
 	}()
-	unPaddingText := PKCS5UnPadding(plainText)
+
+	var iv []byte
+	if len(ivDes)!=0{
+		if len(ivDes)!=8{
+			return nil,ErrIvDes
+		}else{
+			iv=ivDes
+		}
+	}else{
+		iv =[]byte(ivdes)
+	}   // Initialization vector
+	blockMode := cipher.NewCBCDecrypter(block, iv)
+
+	plainText := make([]byte,len(cipherText))
+	blockMode.CryptBlocks(plainText,cipherText)
+
+
+	unPaddingText,err := PKCS5UnPadding(plainText)
+	if err!=nil{
+		return nil,err
+	}
 	return unPaddingText,nil
 }

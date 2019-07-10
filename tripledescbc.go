@@ -18,7 +18,7 @@ import (
       algorithm : Encryption: key one encryption -> key two decryption -> key three encryption
                   Decryption: key three decryption -> key two encryption -> key one decryption
  */
-func TripleDesEncrypt(plainText ,key []byte)([]byte,error){
+func TripleDesEncrypt(plainText ,key []byte,ivDes...byte)([]byte,error){
 	if len(key)!=24{
 		return nil,ErrKeyLengthTwentyFour
 	}
@@ -28,7 +28,16 @@ func TripleDesEncrypt(plainText ,key []byte)([]byte,error){
 	}
 	paddingText := PKCS5Padding(plainText, block.BlockSize())
 
-	iv :=[]byte(ivdes)
+	var iv []byte
+	if len(ivDes)!=0{
+		if len(ivDes)!=8{
+			return nil,ErrIvDes
+		}else{
+			iv=ivDes
+		}
+	}else{
+		iv =[]byte(ivdes)
+	}
 	blockMode := cipher.NewCBCEncrypter(block, iv)
 
 	cipherText := make([]byte,len(paddingText))
@@ -36,7 +45,7 @@ func TripleDesEncrypt(plainText ,key []byte)([]byte,error){
 	return cipherText,nil
 }
 
-func TripleDesDecrypt(cipherText ,key []byte) ([]byte,error){
+func TripleDesDecrypt(cipherText ,key []byte,ivDes...byte) ([]byte,error){
 	if len(key)!=24{
 		return nil,ErrKeyLengthTwentyFour
 	}
@@ -45,12 +54,6 @@ func TripleDesDecrypt(cipherText ,key []byte) ([]byte,error){
 	if err!=nil{
 		return nil,err
 	}
-
-	iv :=[]byte(ivdes)
-	blockMode := cipher.NewCBCDecrypter(block, iv)
-
-	paddingText := make([]byte,len(cipherText)) //
-	blockMode.CryptBlocks(paddingText,cipherText)
 
 	// 2. Delete the filling
 	// Before deleting, prevent the user from entering different keys twice and causing panic, so do an error handling
@@ -64,6 +67,26 @@ func TripleDesDecrypt(cipherText ,key []byte) ([]byte,error){
 			}
 		}
 	}()
-	plainText := PKCS5UnPadding(paddingText)
+
+	var iv []byte
+	if len(ivDes)!=0{
+		if len(ivDes)!=8{
+			return nil,ErrIvDes
+		}else{
+			iv=ivDes
+		}
+	}else{
+		iv =[]byte(ivdes)
+	}
+	blockMode := cipher.NewCBCDecrypter(block, iv)
+
+	paddingText := make([]byte,len(cipherText)) //
+	blockMode.CryptBlocks(paddingText,cipherText)
+
+
+	plainText ,err:= PKCS5UnPadding(paddingText)
+	if err!=nil{
+		return nil,err
+	}
 	return plainText,nil
 }
