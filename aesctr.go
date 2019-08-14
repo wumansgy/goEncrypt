@@ -15,7 +15,7 @@ import (
 	AES CTR mode encryption and decryption
 */
 func AesCtrEncrypt(plainText ,key []byte,ivAes...byte)([]byte,error){
-	if len(key)!=16{
+	if len(key) != 16 && len(key) != 24 && len(key) != 32{
 		return nil,ErrKeyLengthSixteen
 	}
 	block, err := aes.NewCipher(key)
@@ -41,7 +41,7 @@ func AesCtrEncrypt(plainText ,key []byte,ivAes...byte)([]byte,error){
 }
 
 func AesCtrDecrypt(cipherText ,key []byte,ivAes...byte)([]byte,error){
-	if len(key)!=16{
+	if len(key) != 16 && len(key) != 24 && len(key) != 32{
 		return nil,ErrKeyLengthSixteen
 	}
 	block, err := aes.NewCipher(key)
