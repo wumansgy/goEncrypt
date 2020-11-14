@@ -30,7 +30,7 @@ func PKCS5Padding(plainText []byte, blockSize int) []byte{
 func PKCS5UnPadding(plainText []byte)([]byte,error){
 	length := len(plainText)
 	number:= int(plainText[length-1])
-	if number>=length{
+	if number>length{
 		return nil,ErrPaddingSize
 	}
 	return plainText[:length-number],nil
