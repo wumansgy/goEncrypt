@@ -27,22 +27,22 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-package goEncrypt
+package ecc
 
 import (
+	"crypto"
+	"crypto/aes"
 	"crypto/cipher"
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/hmac"
+	"crypto/sha256"
+	"crypto/sha512"
 	"crypto/subtle"
 	"fmt"
 	"hash"
 	"io"
 	"math/big"
-	"crypto"
-	"crypto/sha256"
-	"crypto/aes"
-	"crypto/sha512"
 )
 
 var (
@@ -378,9 +378,9 @@ func ParamsFromCurve(curve elliptic.Curve) (params *ECIESParams) {
 }
 var paramsFromCurve = map[elliptic.Curve]*ECIESParams{
 	//ethcrypto.S256(): ECIES_AES128_SHA256,
-	elliptic.P256():  ECIES_AES128_SHA256,
-	elliptic.P384():  ECIES_AES256_SHA384,
-	elliptic.P521():  ECIES_AES256_SHA512,
+	elliptic.P256(): ECIES_AES128_SHA256,
+	elliptic.P384(): ECIES_AES256_SHA384,
+	elliptic.P521(): ECIES_AES256_SHA512,
 }
 var (
 	ECIES_AES128_SHA256 = &ECIESParams{
