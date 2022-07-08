@@ -1,6 +1,7 @@
 package rsa
 
 import (
+	"bytes"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
@@ -34,15 +35,36 @@ func rsaEncrypt(plainText, publicKey []byte) (cipherText []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-
-	cipherText, err = rsa.EncryptPKCS1v15(rand.Reader, pub, plainText)
-	if err != nil {
-		return nil, err
+	pubSize, plainTextSize := pub.Size(), len(plainText)
+	// EncryptPKCS1v15 encrypts the given message with RSA and the padding
+	// scheme from PKCS #1 v1.5.  The message must be no longer than the
+	// length of the public modulus minus 11 bytes.
+	//
+	// The rand parameter is used as a source of entropy to ensure that
+	// encrypting the same message twice doesn't result in the same
+	// ciphertext.
+	//
+	// WARNING: use of this function to encrypt plaintexts other than
+	// session keys is dangerous. Use RSA OAEP in new protocols.
+	offSet, once := 0, pubSize-11
+	buffer := bytes.Buffer{}
+	for offSet < plainTextSize {
+		endIndex := offSet + once
+		if endIndex > plainTextSize {
+			endIndex = plainTextSize
+		}
+		bytesOnce, err := rsa.EncryptPKCS1v15(rand.Reader, pub, plainText[offSet:endIndex])
+		if err != nil {
+			return nil, err
+		}
+		buffer.Write(bytesOnce)
+		offSet = endIndex
 	}
+	cipherText = buffer.Bytes()
 	return cipherText, nil
 }
 
-func rsaDecrypt(cryptText, privateKey []byte) (plainText []byte, err error) {
+func rsaDecrypt(cipherText, privateKey []byte) (plainText []byte, err error) {
 	defer func() {
 		if err := recover(); err != nil {
 			switch err.(type) {
@@ -57,10 +79,22 @@ func rsaDecrypt(cryptText, privateKey []byte) (plainText []byte, err error) {
 	if err != nil {
 		return []byte{}, err
 	}
-	plainText, err = rsa.DecryptPKCS1v15(rand.Reader, pri, cryptText)
-	if err != nil {
-		return []byte{}, err
+	priSize, cipherTextSize := pri.Size(), len(cipherText)
+	var offSet = 0
+	var buffer = bytes.Buffer{}
+	for offSet < cipherTextSize {
+		endIndex := offSet + priSize
+		if endIndex > cipherTextSize {
+			endIndex = cipherTextSize
+		}
+		bytesOnce, err := rsa.DecryptPKCS1v15(rand.Reader, pri, cipherText[offSet:endIndex])
+		if err != nil {
+			return nil, err
+		}
+		buffer.Write(bytesOnce)
+		offSet = endIndex
 	}
+	plainText = buffer.Bytes()
 	return plainText, nil
 }
 
