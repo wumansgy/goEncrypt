@@ -21,11 +21,11 @@ func init() {
 	log.SetReportCaller(true)
 }
 
-func DesCbcEncrypt(plainText, key, ivDes []byte) ([]byte, error) {
-	if len(key) != 8 {
+func DesCbcEncrypt(plainText, secretKey, ivDes []byte) (cipherText []byte, err error) {
+	if len(secretKey) != 8 {
 		return nil, goEncrypt.ErrKeyLengtheEight
 	}
-	block, err := des.NewCipher(key)
+	block, err := des.NewCipher(secretKey)
 	if err != nil {
 		return nil, err
 	}
@@ -43,16 +43,16 @@ func DesCbcEncrypt(plainText, key, ivDes []byte) ([]byte, error) {
 	} // Initialization vector
 	blockMode := cipher.NewCBCEncrypter(block, iv)
 
-	cipherText := make([]byte, len(paddingText))
+	cipherText = make([]byte, len(paddingText))
 	blockMode.CryptBlocks(cipherText, paddingText)
 	return cipherText, nil
 }
 
-func DesCbcDecrypt(cipherText, key, ivDes []byte) ([]byte, error) {
-	if len(key) != 8 {
+func DesCbcDecrypt(cipherText, secretKey, ivDes []byte) (plainText []byte, err error) {
+	if len(secretKey) != 8 {
 		return nil, goEncrypt.ErrKeyLengtheEight
 	}
-	block, err := des.NewCipher(key)
+	block, err := des.NewCipher(secretKey)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func DesCbcDecrypt(cipherText, key, ivDes []byte) ([]byte, error) {
 	} // Initialization vector
 	blockMode := cipher.NewCBCDecrypter(block, iv)
 
-	plainText := make([]byte, len(cipherText))
+	plainText = make([]byte, len(cipherText))
 	blockMode.CryptBlocks(plainText, cipherText)
 
 	unPaddingText, err := goEncrypt.PKCS5UnPadding(plainText, block.BlockSize())
@@ -90,28 +90,28 @@ func DesCbcDecrypt(cipherText, key, ivDes []byte) ([]byte, error) {
 	return unPaddingText, nil
 }
 
-func DesCbcEncryptBase64(plainText, key, ivAes []byte) (string, error) {
-	encryBytes, err := DesCbcEncrypt(plainText, key, ivAes)
+func DesCbcEncryptBase64(plainText, secretKey, ivAes []byte) (cipherTextBase64 string, err error) {
+	encryBytes, err := DesCbcEncrypt(plainText, secretKey, ivAes)
 	return base64.StdEncoding.EncodeToString(encryBytes), err
 }
 
-func DesCbcEncryptHex(plainText, key, ivAes []byte) (string, error) {
-	encryBytes, err := DesCbcEncrypt(plainText, key, ivAes)
+func DesCbcEncryptHex(plainText, secretKey, ivAes []byte) (cipherTextHex string, err error) {
+	encryBytes, err := DesCbcEncrypt(plainText, secretKey, ivAes)
 	return hex.EncodeToString(encryBytes), err
 }
 
-func DesCbcDecryptByBase64(cipherTextBase64 string, key, ivAes []byte) ([]byte, error) {
+func DesCbcDecryptByBase64(cipherTextBase64 string, secretKey, ivAes []byte) (plainText []byte, err error) {
 	plainTextBytes, err := base64.StdEncoding.DecodeString(cipherTextBase64)
 	if err != nil {
 		return []byte{}, err
 	}
-	return DesCbcDecrypt(plainTextBytes, key, ivAes)
+	return DesCbcDecrypt(plainTextBytes, secretKey, ivAes)
 }
 
-func DesCbcDecryptByHex(cipherTextHex string, key, ivAes []byte) ([]byte, error) {
+func DesCbcDecryptByHex(cipherTextHex string, secretKey, ivAes []byte) (plainText []byte, err error) {
 	plainTextBytes, err := hex.DecodeString(cipherTextHex)
 	if err != nil {
 		return []byte{}, err
 	}
-	return DesCbcDecrypt(plainTextBytes, key, ivAes)
+	return DesCbcDecrypt(plainTextBytes, secretKey, ivAes)
 }

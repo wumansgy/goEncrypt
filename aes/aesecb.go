@@ -72,11 +72,11 @@ func (x *ecbDecrypter) CryptBlocks(dst, src []byte) {
 	}
 }
 
-func AesEcbEncrypt(plainText, key []byte) ([]byte, error) {
-	if len(key) != 16 && len(key) != 24 && len(key) != 32 {
+func AesEcbEncrypt(plainText, secretKey []byte) (cipherText []byte, err error) {
+	if len(secretKey) != 16 && len(secretKey) != 24 && len(secretKey) != 32 {
 		return nil, goEncrypt.ErrKeyLengthSixteen
 	}
-	block, err := aes.NewCipher(key)
+	block, err := aes.NewCipher(secretKey)
 	if err != nil {
 		return nil, err
 	}
@@ -90,8 +90,11 @@ func AesEcbEncrypt(plainText, key []byte) ([]byte, error) {
 	return crypted, nil
 }
 
-func AesEcbDecrypt(plainText, key []byte) ([]byte, error) {
-	block, err := aes.NewCipher(key)
+func AesEcbDecrypt(plainText, secretKey []byte) (cipjerText []byte, err error) {
+	if len(secretKey) != 16 && len(secretKey) != 24 && len(secretKey) != 32 {
+		return nil, goEncrypt.ErrKeyLengthSixteen
+	}
+	block, err := aes.NewCipher(secretKey)
 	if err != nil {
 		return nil, err
 	}
@@ -103,17 +106,17 @@ func AesEcbDecrypt(plainText, key []byte) ([]byte, error) {
 	return goEncrypt.PKCS5UnPadding(decrypted, ecbDecrypter.BlockSize())
 }
 
-func AesEcbEncryptBase64(plainText, key []byte) (string, error) {
+func AesEcbEncryptBase64(plainText, key []byte) (cipherTextBase64 string, err error) {
 	encryBytes, err := AesEcbEncrypt(plainText, key)
 	return base64.StdEncoding.EncodeToString(encryBytes), err
 }
 
-func AesEcbEncryptHex(plainText, key []byte) (string, error) {
+func AesEcbEncryptHex(plainText, key []byte) (cipherTextHex string, err error) {
 	encryBytes, err := AesEcbEncrypt(plainText, key)
 	return hex.EncodeToString(encryBytes), err
 }
 
-func AesEcbDecryptByBase64(cipherTextBase64 string, key []byte) ([]byte, error) {
+func AesEcbDecryptByBase64(cipherTextBase64 string, key []byte) (plainText []byte, err error) {
 	plainTextBytes, err := base64.StdEncoding.DecodeString(cipherTextBase64)
 	if err != nil {
 		return []byte{}, err
@@ -121,7 +124,7 @@ func AesEcbDecryptByBase64(cipherTextBase64 string, key []byte) ([]byte, error) 
 	return AesEcbDecrypt(plainTextBytes, key)
 }
 
-func AesEcbDecryptByHex(cipherTextHex string, key []byte) ([]byte, error) {
+func AesEcbDecryptByHex(cipherTextHex string, key []byte) (plainText []byte, err error) {
 	plainTextBytes, err := hex.DecodeString(cipherTextHex)
 	if err != nil {
 		return []byte{}, err

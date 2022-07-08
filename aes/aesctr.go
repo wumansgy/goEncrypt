@@ -14,11 +14,11 @@ import (
 /*
 	AES CTR mode encryption and decryption
 */
-func AesCtrEncrypt(plainText, key, ivAes []byte) ([]byte, error) {
-	if len(key) != 16 && len(key) != 24 && len(key) != 32 {
+func AesCtrEncrypt(plainText, secretKey, ivAes []byte) (cipherText []byte, err error) {
+	if len(secretKey) != 16 && len(secretKey) != 24 && len(secretKey) != 32 {
 		return nil, goEncrypt.ErrKeyLengthSixteen
 	}
-	block, err := aes.NewCipher(key)
+	block, err := aes.NewCipher(secretKey)
 	if err != nil {
 		return nil, err
 	}
@@ -34,17 +34,17 @@ func AesCtrEncrypt(plainText, key, ivAes []byte) ([]byte, error) {
 	}
 	stream := cipher.NewCTR(block, iv)
 
-	cipherText := make([]byte, len(plainText))
+	cipherText = make([]byte, len(plainText))
 	stream.XORKeyStream(cipherText, plainText)
 
 	return cipherText, nil
 }
 
-func AesCtrDecrypt(cipherText, key, ivAes []byte) ([]byte, error) {
-	if len(key) != 16 && len(key) != 24 && len(key) != 32 {
+func AesCtrDecrypt(cipherText, secretKey, ivAes []byte) (plainText []byte, err error) {
+	if len(secretKey) != 16 && len(secretKey) != 24 && len(secretKey) != 32 {
 		return nil, goEncrypt.ErrKeyLengthSixteen
 	}
-	block, err := aes.NewCipher(key)
+	block, err := aes.NewCipher(secretKey)
 	if err != nil {
 		return nil, err
 	}
@@ -72,34 +72,34 @@ func AesCtrDecrypt(cipherText, key, ivAes []byte) ([]byte, error) {
 	}
 	stream := cipher.NewCTR(block, iv)
 
-	plainText := make([]byte, len(cipherText))
+	plainText = make([]byte, len(cipherText))
 	stream.XORKeyStream(plainText, cipherText)
 
 	return plainText, nil
 }
 
-func AesCtrEncryptBase64(plainText, key, ivAes []byte) (string, error) {
-	encryBytes, err := AesCtrEncrypt(plainText, key, ivAes)
+func AesCtrEncryptBase64(plainText, secretKey, ivAes []byte) (cipherTextBase64 string, err error) {
+	encryBytes, err := AesCtrEncrypt(plainText, secretKey, ivAes)
 	return base64.StdEncoding.EncodeToString(encryBytes), err
 }
 
-func AesCtrEncryptHex(plainText, key, ivAes []byte) (string, error) {
-	encryBytes, err := AesCtrEncrypt(plainText, key, ivAes)
+func AesCtrEncryptHex(plainText, secretKey, ivAes []byte) (cipherTextHex string, err error) {
+	encryBytes, err := AesCtrEncrypt(plainText, secretKey, ivAes)
 	return hex.EncodeToString(encryBytes), err
 }
 
-func AesCtrDecryptByBase64(cipherTextBase64 string, key, ivAes []byte) ([]byte, error) {
+func AesCtrDecryptByBase64(cipherTextBase64 string, secretKey, ivAes []byte) (plainText []byte, err error) {
 	plainTextBytes, err := base64.StdEncoding.DecodeString(cipherTextBase64)
 	if err != nil {
 		return []byte{}, err
 	}
-	return AesCtrDecrypt(plainTextBytes, key, ivAes)
+	return AesCtrDecrypt(plainTextBytes, secretKey, ivAes)
 }
 
-func AesCtrDecryptByHex(cipherTextHex string, key, ivAes []byte) ([]byte, error) {
+func AesCtrDecryptByHex(cipherTextHex string, secretKey, ivAes []byte) (plainText []byte, err error) {
 	plainTextBytes, err := hex.DecodeString(cipherTextHex)
 	if err != nil {
 		return []byte{}, err
 	}
-	return AesCtrDecrypt(plainTextBytes, key, ivAes)
+	return AesCtrDecrypt(plainTextBytes, secretKey, ivAes)
 }

@@ -5,13 +5,12 @@ import (
 	"testing"
 )
 
+var (
+	key24     = "123456781234567812345678"
+	plainText = "TestTripleDes"
+)
+
 func TestTripleDesCbc(t *testing.T) {
-	var (
-		key24     = "123456781234567812345678"
-		plaintext = "TestTripleDes"
-		badiv     = "11111"
-		goodiv    = "12345678"
-	)
 	cipherBytes, err := TripleDesEncrypt([]byte(plaintext), []byte(key24), nil)
 	assert.Nil(t, err)
 	text, err := TripleDesDecrypt(cipherBytes, []byte(key24), nil)
@@ -32,4 +31,26 @@ func TestTripleDesCbc(t *testing.T) {
 	cipherBytes, err = TripleDesEncrypt([]byte(plaintext), []byte(badiv), []byte(badiv))
 	assert.NotNil(t, err)
 
+}
+
+func TestTripleDesEncryptBase64(t *testing.T) {
+	cipher, err := TripleDesEncryptBase64([]byte(plainText), []byte(key24), nil)
+	assert.Nil(t, err)
+	text, err := TripleDesDecryptByBase64(cipher, []byte(key24), nil)
+	assert.Nil(t, err)
+	assert.Equal(t, string(text), plainText)
+
+	_, err = TripleDesDecryptByBase64("11111", []byte(key24), nil)
+	assert.NotNil(t, err)
+}
+
+func TestTripleDesEncryptHex(t *testing.T) {
+	cipher, err := TripleDesEncryptHex([]byte(plainText), []byte(key24), nil)
+	assert.Nil(t, err)
+	text, err := TripleDesDecryptByHex(cipher, []byte(key24), nil)
+	assert.Nil(t, err)
+	assert.Equal(t, string(text), plainText)
+
+	_, err = TripleDesDecryptByHex("11111", []byte(key24), nil)
+	assert.NotNil(t, err)
 }

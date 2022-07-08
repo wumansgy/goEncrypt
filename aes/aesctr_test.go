@@ -36,3 +36,25 @@ func TestAesCtr(t *testing.T) {
 	text, err = AesCtrDecrypt(cipherBytes, []byte(key), nil)
 	assert.NotNil(t, err)
 }
+
+func TestAesCtrEncryptBase64(t *testing.T) {
+	cipher, err := AesCtrEncryptBase64([]byte(plaintext), []byte(key16), nil)
+	assert.Nil(t, err)
+	text, err := AesCtrDecryptByBase64(cipher, []byte(key16), nil)
+	assert.Nil(t, err)
+	assert.Equal(t, string(text), plaintext)
+
+	_, err = AesCtrDecryptByBase64("11111", []byte(key16), nil)
+	assert.NotNil(t, err)
+}
+
+func TestAesCtrEncryptHex(t *testing.T) {
+	cipher, err := AesCtrEncryptHex([]byte(plaintext), []byte(key16), nil)
+	assert.Nil(t, err)
+	text, err := AesCtrDecryptByHex(cipher, []byte(key16), nil)
+	assert.Nil(t, err)
+	assert.Equal(t, string(text), plaintext)
+
+	_, err = AesCtrDecryptByHex("11111", []byte(key16), nil)
+	assert.NotNil(t, err)
+}

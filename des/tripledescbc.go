@@ -16,11 +16,11 @@ import (
       algorithm : Encryption: key one encryption -> key two decryption -> key three encryption
                   Decryption: key three decryption -> key two encryption -> key one decryption
 */
-func TripleDesEncrypt(plainText, key, ivDes []byte) ([]byte, error) {
-	if len(key) != 24 {
+func TripleDesEncrypt(plainText, secretKey, ivDes []byte) (cipherText []byte, err error) {
+	if len(secretKey) != 24 {
 		return nil, goEncrypt.ErrKeyLengthTwentyFour
 	}
-	block, err := des.NewTripleDESCipher(key)
+	block, err := des.NewTripleDESCipher(secretKey)
 	if err != nil {
 		return nil, err
 	}
@@ -38,17 +38,17 @@ func TripleDesEncrypt(plainText, key, ivDes []byte) ([]byte, error) {
 	}
 	blockMode := cipher.NewCBCEncrypter(block, iv)
 
-	cipherText := make([]byte, len(paddingText))
+	cipherText = make([]byte, len(paddingText))
 	blockMode.CryptBlocks(cipherText, paddingText)
 	return cipherText, nil
 }
 
-func TripleDesDecrypt(cipherText, key, ivDes []byte) ([]byte, error) {
-	if len(key) != 24 {
+func TripleDesDecrypt(cipherText, secretKey, ivDes []byte) (plainText []byte, err error) {
+	if len(secretKey) != 24 {
 		return nil, goEncrypt.ErrKeyLengthTwentyFour
 	}
 	// 1. Specifies that the 3des decryption algorithm creates and returns a cipher.Block interface using the TDEA algorithm。
-	block, err := des.NewTripleDESCipher(key)
+	block, err := des.NewTripleDESCipher(secretKey)
 	if err != nil {
 		return nil, err
 	}
@@ -81,35 +81,35 @@ func TripleDesDecrypt(cipherText, key, ivDes []byte) ([]byte, error) {
 	paddingText := make([]byte, len(cipherText)) //
 	blockMode.CryptBlocks(paddingText, cipherText)
 
-	plainText, err := goEncrypt.PKCS5UnPadding(paddingText, block.BlockSize())
+	plainText, err = goEncrypt.PKCS5UnPadding(paddingText, block.BlockSize())
 	if err != nil {
 		return nil, err
 	}
 	return plainText, nil
 }
 
-func TripleDesEncryptBase64(plainText, key, ivAes []byte) (string, error) {
-	encryBytes, err := TripleDesEncrypt(plainText, key, ivAes)
+func TripleDesEncryptBase64(plainText, secretKey, ivAes []byte) (cipherTextBase64 string, err error) {
+	encryBytes, err := TripleDesEncrypt(plainText, secretKey, ivAes)
 	return base64.StdEncoding.EncodeToString(encryBytes), err
 }
 
-func TripleDesEncryptHex(plainText, key, ivAes []byte) (string, error) {
-	encryBytes, err := TripleDesEncrypt(plainText, key, ivAes)
+func TripleDesEncryptHex(plainText, secretKey, ivAes []byte) (cipherTextHex string,err error) {
+	encryBytes, err := TripleDesEncrypt(plainText, secretKey, ivAes)
 	return hex.EncodeToString(encryBytes), err
 }
 
-func TripleDesDecryptByBase64(cipherTextBase64 string, key, ivAes []byte) ([]byte, error) {
+func TripleDesDecryptByBase64(cipherTextBase64 string, secretKey, ivAes []byte) (plainText []byte,err error) {
 	plainTextBytes, err := base64.StdEncoding.DecodeString(cipherTextBase64)
 	if err != nil {
 		return []byte{}, err
 	}
-	return TripleDesDecrypt(plainTextBytes, key, ivAes)
+	return TripleDesDecrypt(plainTextBytes, secretKey, ivAes)
 }
 
-func TripleDesDecryptByHex(cipherTextHex string, key, ivAes []byte) ([]byte, error) {
+func TripleDesDecryptByHex(cipherTextHex string, secretKey, ivAes []byte) (plainText []byte, err error) {
 	plainTextBytes, err := hex.DecodeString(cipherTextHex)
 	if err != nil {
 		return []byte{}, err
 	}
-	return TripleDesDecrypt(plainTextBytes, key, ivAes)
+	return TripleDesDecrypt(plainTextBytes, secretKey, ivAes)
 }

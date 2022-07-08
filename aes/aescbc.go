@@ -22,11 +22,11 @@ func init() {
 }
 
 // encrypt
-func AesCbcEncrypt(plainText, key, ivAes []byte) ([]byte, error) {
-	if len(key) != 16 && len(key) != 24 && len(key) != 32 {
+func AesCbcEncrypt(plainText, secretKey, ivAes []byte) (cipherText []byte, err error) {
+	if len(secretKey) != 16 && len(secretKey) != 24 && len(secretKey) != 32 {
 		return nil, goEncrypt.ErrKeyLengthSixteen
 	}
-	block, err := aes.NewCipher(key)
+	block, err := aes.NewCipher(secretKey)
 	if err != nil {
 		return nil, err
 	}
@@ -43,17 +43,17 @@ func AesCbcEncrypt(plainText, key, ivAes []byte) ([]byte, error) {
 		iv = []byte(goEncrypt.Ivaes)
 	} // To initialize the vector, it needs to be the same length as block.blocksize
 	blockMode := cipher.NewCBCEncrypter(block, iv)
-	cipherText := make([]byte, len(paddingText))
+	cipherText = make([]byte, len(paddingText))
 	blockMode.CryptBlocks(cipherText, paddingText)
 	return cipherText, nil
 }
 
 // decrypt
-func AesCbcDecrypt(cipherText, key, ivAes []byte) ([]byte, error) {
-	if len(key) != 16 && len(key) != 24 && len(key) != 32 {
+func AesCbcDecrypt(cipherText, secretKey, ivAes []byte) (plainText []byte, err error) {
+	if len(secretKey) != 16 && len(secretKey) != 24 && len(secretKey) != 32 {
 		return nil, goEncrypt.ErrKeyLengthSixteen
 	}
-	block, err := aes.NewCipher(key)
+	block, err := aes.NewCipher(secretKey)
 	if err != nil {
 		return nil, err
 	}
@@ -82,35 +82,35 @@ func AesCbcDecrypt(cipherText, key, ivAes []byte) ([]byte, error) {
 	paddingText := make([]byte, len(cipherText))
 	blockMode.CryptBlocks(paddingText, cipherText)
 
-	plainText, err := goEncrypt.PKCS5UnPadding(paddingText, block.BlockSize())
+	plainText, err = goEncrypt.PKCS5UnPadding(paddingText, block.BlockSize())
 	if err != nil {
 		return nil, err
 	}
 	return plainText, nil
 }
 
-func AesCbcEncryptBase64(plainText, key, ivAes []byte) (string, error) {
-	encryBytes, err := AesCbcEncrypt(plainText, key, ivAes)
+func AesCbcEncryptBase64(plainText, secretKey, ivAes []byte) (cipherTextBase64 string, err error) {
+	encryBytes, err := AesCbcEncrypt(plainText, secretKey, ivAes)
 	return base64.StdEncoding.EncodeToString(encryBytes), err
 }
 
-func AesCbcEncryptHex(plainText, key, ivAes []byte) (string, error) {
-	encryBytes, err := AesCbcEncrypt(plainText, key, ivAes)
+func AesCbcEncryptHex(plainText, secretKey, ivAes []byte) (cipherTextHex string, err error) {
+	encryBytes, err := AesCbcEncrypt(plainText, secretKey, ivAes)
 	return hex.EncodeToString(encryBytes), err
 }
 
-func AesCbcDecryptByBase64(cipherTextBase64 string, key, ivAes []byte) ([]byte, error) {
+func AesCbcDecryptByBase64(cipherTextBase64 string, secretKey, ivAes []byte) (plainText []byte, err error) {
 	plainTextBytes, err := base64.StdEncoding.DecodeString(cipherTextBase64)
 	if err != nil {
 		return []byte{}, err
 	}
-	return AesCbcDecrypt(plainTextBytes, key, ivAes)
+	return AesCbcDecrypt(plainTextBytes, secretKey, ivAes)
 }
 
-func AesCbcDecryptByHex(cipherTextHex string, key, ivAes []byte) ([]byte, error) {
+func AesCbcDecryptByHex(cipherTextHex string, secretKey, ivAes []byte) (plainText []byte, err error) {
 	plainTextBytes, err := hex.DecodeString(cipherTextHex)
 	if err != nil {
 		return []byte{}, err
 	}
-	return AesCbcDecrypt(plainTextBytes, key, ivAes)
+	return AesCbcDecrypt(plainTextBytes, secretKey, ivAes)
 }
